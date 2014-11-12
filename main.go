@@ -9,7 +9,8 @@ import (
 )
 
 func main() {
-  client, err := docker.NewClient("tcp://127.0.0.1:2375")
+  fmt.Println("hello")
+  client, err := docker.NewClient("tcp://10.10.29.91:2375")
 
   containers, err := client.FetchAllContainers(true)
 
