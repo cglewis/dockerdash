@@ -1,31 +1,77 @@
 package main
 
 import (
-  docker "github.com/cpuguy83/dockerclient"
+	"fmt"
+	"os"
+	"strings"
 
-  "fmt"
-  "os"
-  "strings"
+	"github.com/codegangsta/cli"
+	"github.com/cpuguy83/dockerclient"
 )
 
 func main() {
-  fmt.Println("hello")
-  client, err := docker.NewClient("tcp://10.10.29.91:2375")
+	app := cli.NewApp()
+	app.Name = "dockerdash"
+	app.Usage = "A simple executive dashbaord for Docker"
+	app.Version = "0.1.0"
+	app.Author = "Charlie Lewis"
+	app.Email = "defermat@gmail.com"
+	certPath := os.Getenv("DOCKER_CERT_PATH")
+	if certPath == "" {
+		certPath = filepath.Join(os.Getenv("HOME"), ".docker")
+	}
+	app.Flags = []cli.Flag{
+		cli.StringFlag{
+			Name:   "host, H",
+			Value:  "/var/run/docker.sock",
+			Usage:  "Location of the Docker socket",
+			EnvVar: "DOCKER_HOST",
+		},
+		cli.BoolFlag{
+			Name:   "tls",
+			Usage:  "Enable TLS",
+			EnvVar: "DOCKER_TLS",
+		},
+		cli.StringFlag{
+			Name:   "tlsverify",
+			Usage:  "Enable TLS Server Verification",
+			EnvVar: "DOCKER_TLS_VERIFY",
+		},
+		cli.StringFlag{
+			Name:  "tlscacert",
+			Value: filepath.Join(certPath, "ca.pem"),
+			Usage: "Location of tls ca cert",
+		},
+		cli.StringFlag{
+			Name:  "tlscert",
+			Value: filepath.Join(certPath, "cert.pem"),
+			Usage: "Location of tls cert",
+		},
+		cli.StringFlag{
+			Name:  "tlskey",
+			Value: filepath.Join(certPath, "key.pem"),
+			Usage: "Location of tls key",
+		},
+	}
 
-  containers, err := client.FetchAllContainers(true)
+	app.Commands = []cli.Command{
+		{
+			Name:   "list",
+			Usage:  "List all containers",
+			Action: containerList,
+			Flags: []cli.Flag{
+				cli.BoolFlag{
+					Name:  "quiet, q",
+					Usage: "Display only IDs",
+				},
+			},
+		},
+		{
+			Name:   "inspect",
+			Usage:  "Get details of container",
+			Action: containerInspect,
+		},
+	}
 
-  if err != nil {
-    fmt.Println(err)
-    os.Exit(1)
-  }
-
-  for _, container := range containers {
-    container, err = client.FetchContainer(container.Id)
-    if err != nil {
-      fmt.Println(err)
-    }
-
-    name := strings.TrimPrefix(container.Name, "/")
-    fmt.Println(name)
-  }
+	app.Run(os.Args)
 }
