@@ -1,9 +1,13 @@
 package main
 
 import (
+	"crypto/tls"
+	"crypto/x509"
 	"fmt"
+	"io/ioutil"
 	"os"
-	"strings"
+	"path/filepath"
+	//"strings"
 
 	"github.com/codegangsta/cli"
 	"github.com/cpuguy83/dockerclient"
@@ -74,4 +78,41 @@ func main() {
 	}
 
 	app.Run(os.Args)
+}
+
+func getDockerClient(ctx *cli.Context) docker.Docker {
+	docker, err := docker.NewClient(ctx.GlobalString("host"))
+	var tlsConfig tls.Config
+	tlsConfig.InsecureSkipVerify = true
+	if ctx.GlobalBool("tls") || ctx.GlobalString("tlsverify") != "" {
+		if ctx.GlobalString("tlsverify") != "" {
+			certPool := x509.NewCertPool()
+			file, err := ioutil.ReadFile(ctx.GlobalString("tlscacert"))
+			if err != nil {
+				fmt.Fprintln(os.Stderr, err)
+				os.Exit(1)
+			}
+			certPool.AppendCertsFromPEM(file)
+			tlsConfig.RootCAs = certPool
+			tlsConfig.InsecureSkipVerify = false
+		}
+
+		_, errCert := os.Stat(ctx.GlobalString("tlscert"))
+		_, errKey := os.Stat(ctx.GlobalString("tlskey"))
+		if errCert == nil || errKey == nil {
+			cert, err := tls.LoadX509KeyPair(ctx.GlobalString("tlscert"), ctx.GlobalString("tlskey"))
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "Couldn't load X509 key pair: %s. Key encrpyted?\n", err)
+				os.Exit(1)
+			}
+			tlsConfig.Certificates = []tls.Certificate{cert}
+		}
+		tlsConfig.MinVersion = tls.VersionTLS10
+		docker.SetTlsConfig(&tlsConfig)
+	}
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+	return docker
 }
