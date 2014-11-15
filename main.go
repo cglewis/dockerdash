@@ -71,6 +71,11 @@ func main() {
 			},
 		},
 		{
+			Name:   "count",
+			Usage:  "Get count of containers",
+			Action: containerCount,
+		},
+		{
 			Name:   "inspect",
 			Usage:  "Get details of container",
 			Action: containerInspect,

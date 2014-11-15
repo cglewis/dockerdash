@@ -7,6 +7,17 @@ import (
 	"github.com/codegangsta/cli"
 )
 
+func containerCount(ctx *cli.Context) {
+	docker := getDockerClient(ctx)
+	containers, err := docker.FetchAllContainers(true)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+
+	fmt.Println(len(containers))
+}
+
 func containerList(ctx *cli.Context) {
 	docker := getDockerClient(ctx)
 	containers, err := docker.FetchAllContainers(true)
