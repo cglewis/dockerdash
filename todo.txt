@@ -1,0 +1,18 @@
+containers by os/image parent
+space taken by containers/images
+running containers by host
+uptimes of containers
+ports exposed
+
+power states (running, stopped, paused)
+volumes
+links
+
+events/logs
+
+commands?
+users?
+
+container top
+
+usage heat map
