@@ -18,6 +18,17 @@ func containerCount(ctx *cli.Context) {
 	fmt.Println(len(containers))
 }
 
+func info(ctx *cli.Context) {
+	docker := getDockerClient(ctx)
+	info, err := docker.Info()
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+
+	fmt.Println(info)
+}
+
 func containerList(ctx *cli.Context) {
 	docker := getDockerClient(ctx)
 	containers, err := docker.FetchAllContainers(true)
