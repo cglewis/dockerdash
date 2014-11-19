@@ -39,6 +39,7 @@ func containerList(ctx *cli.Context) {
 
 	for _, c := range containers {
 		fmt.Println(c.Id)
+		fmt.Println(c.Name)
 	}
 	// TODO
 }
