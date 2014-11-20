@@ -60,7 +60,7 @@ func main() {
 
 	app.Commands = []cli.Command{
 		{
-			Name:   "list",
+			Name:   "container-list",
 			Usage:  "List all containers",
 			Action: containerList,
 			Flags: []cli.Flag{
@@ -71,9 +71,14 @@ func main() {
 			},
 		},
 		{
-			Name:   "count",
+			Name:   "container-count",
 			Usage:  "Get count of containers",
 			Action: containerCount,
+		},
+		{
+			Name:   "image-list",
+			Usage:  "List all images",
+			Action: imageList,
 		},
 		{
 			Name:   "info",

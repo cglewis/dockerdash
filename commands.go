@@ -7,6 +7,12 @@ import (
 	"github.com/codegangsta/cli"
 )
 
+func imageList(ctx *cli.Context) {
+
+	fmt.Println("todo")
+	// TODO
+}
+
 func containerCount(ctx *cli.Context) {
 	docker := getDockerClient(ctx)
 	containers, err := docker.FetchAllContainers(true)
