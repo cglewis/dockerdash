@@ -10,7 +10,7 @@ import (
 	//"strings"
 
 	"github.com/codegangsta/cli"
-	"github.com/cpuguy83/dockerclient"
+	"github.com/cglewis/dockerclient"
 )
 
 func main() {
