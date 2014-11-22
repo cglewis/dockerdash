@@ -1,0 +1,17 @@
+mac osx
+---
+
+git clone https://github.com/cglewis/dockerdash.git
+docker build -t dockerdash .
+docker run --name dockerdash -e GOOS=darwin -e GOARCH=amd64 dockerdash
+docker cp dockerdash:/dockerdash ./
+./dockerdash 
+
+linux
+---
+
+git clone https://github.com/cglewis/dockerdash.git
+docker build -t dockerdash .
+docker run --name dockerdash dockerdash
+docker cp dockerdash:/dockerdash ./
+./dockerdash 
