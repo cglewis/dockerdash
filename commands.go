@@ -8,7 +8,11 @@ import (
 )
 
 func imageList(ctx *cli.Context) {
+	fmt.Println("todo")
+	// TODO
+}
 
+func imageInspect(ctx *cli.Context) {
 	fmt.Println("todo")
 	// TODO
 }

@@ -86,9 +86,14 @@ func main() {
 			Action: info,
 		},
 		{
-			Name:   "inspect",
+			Name:   "container-inspect",
 			Usage:  "Get details of container",
 			Action: containerInspect,
+		},
+		{
+			Name:   "image-inspect",
+			Usage:  "Get details of image",
+			Action: imageInspect,
 		},
 	}
 
